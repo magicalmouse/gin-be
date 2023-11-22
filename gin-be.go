@@ -39,5 +39,19 @@ func main() {
 		})
 	}
 
+	router.GET("/", func(ctx *gin.Context) {
+		ctx.String(200, "Hello World!")
+	})
+
+	router.GET("/users/:id", func(ctx *gin.Context) {
+		id := ctx.Param("id")
+		ctx.String(200, "User ID: "+id)
+	})
+
+	router.GET("/search", func(ctx *gin.Context) {
+		query := ctx.DefaultQuery("q", "Hey Nice to meet you")
+		ctx.String(200, "Search query: "+query)
+	})
+
 	router.Run(":8080")
 }
