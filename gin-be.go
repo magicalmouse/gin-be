@@ -29,13 +29,26 @@ func AuthMiddleware() gin.HandlerFunc {
 func main() {
 	router := gin.Default()
 
-	//router.Use(LoggerMiddleware())
-	authGroup := router.Group("/api")
-
-	authGroup.Use(AuthMiddleware())
+	public := router.Group("/public")
 	{
-		authGroup.GET("/data", func(ctx *gin.Context) {
-			ctx.JSON(200, gin.H{"message": "Authenticated and authrized!"})
+		public.GET("/info", func(ctx *gin.Context) {
+			ctx.String(200, "Public information")
+		})
+
+		public.GET("/products", func(ctx *gin.Context) {
+			ctx.String(200, "Public product list")
+		})
+	}
+
+	private := router.Group("/private")
+
+	private.Use(AuthMiddleware())
+	{
+		private.GET("/data", func(ctx *gin.Context) {
+			ctx.String(200, "Private data accessible after authentication")
+		})
+		private.POST("/create", func(ctx *gin.Context) {
+			ctx.String(200, "Create a new resource")
 		})
 	}
 
